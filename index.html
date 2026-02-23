@@ -447,22 +447,28 @@ let state = {
       { family:'S', rot:0, row:7, col:7, ghostRow:14 }
     ],
     settled: new Set([
-      '19,0','19,1','19,2','19,3','19,5','19,6','19,7','19,8','19,9',
-      '18,0','18,1','18,2','18,6','18,7','18,8','18,9',
-      '17,0','17,1','17,7','17,8','17,9',
-      '16,0','16,1','16,8','16,9',
       '15,0','15,1','15,2','15,3','15,4','15,5','15,6','15,9',
+      '16,0','16,1','16,4','16,8','16,9',
+      '17,0','17,1','17,7','17,8','17,9',
+      '18,0','18,1','18,2','18,6','18,7','18,8','18,9',
+      '19,0','19,1','19,2','19,3','19,5','19,6','19,7','19,8','19,9',
     ]),
   },
   waterfall: {
     pieces: [
-      { family:'I', rot:0, row:3, col:0, ghostRow:18 },
-      { family:'O', rot:0, row:3, col:7, ghostRow:17 },
-      { family:'T', rot:2, row:3, col:4, ghostRow:16 },
-      { family:'J', rot:0, row:5, col:8, ghostRow:14 },
-      { family:'Z', rot:0, row:6, col:1, ghostRow:13 },
+      { family:'S', rot:0, row:9, col:7, ghostRow:14 },
+      { family:'O', rot:0, row:7, col:5, ghostRow:13 },
+      { family:'T', rot:1, row:5, col:2, ghostRow:12 },
+      { family:'L', rot:2, row:2, col:3, ghostRow:16 },
+      { family:'I', rot:0, row:1, col:6, ghostRow:12 },
     ],
-    settled: new Set(['19,0','19,1','19,2','19,3','19,5','19,6','19,7','19,8']),
+    settled: new Set([
+      '15,0','15,1','15,2','15,3','15,4','15,5','15,6','15,9',
+      '16,0','16,1','16,4','16,8','16,9',
+      '17,0','17,1','17,7','17,8','17,9',
+      '18,0','18,1','18,2','18,6','18,7','18,8','18,9',
+      '19,0','19,1','19,2','19,3','19,5','19,6','19,7','19,8','19,9',
+    ]),
   },
 };
 
@@ -473,14 +479,14 @@ let currentTab = 'agile';
 // ─────────────────────────────────────────────
 // ── Config (editable via SETTINGS tab) ──
 const cfg = {
-  cell:      46,    // block size px
-  boardY:    213,   // board top Y
-  canvasW:   1920,
+  cell:      40,
+  boardY:    265,
+  canvasW:   1440,
   canvasH:   1200,
-  titleSize: 88,    // main title font size
-  subSize:   34,    // subtitle font size
-  vsSize:    54,    // VS font size
-  titleGap:  12,    // gap between title and subtitle
+  titleSize: 108,
+  subSize:   40,
+  vsSize:    82,
+  titleGap:  24,
   titleL:    'AGILE',
   titleR:    'WATERFALL',
   subL:      'One piece at a time',
