@@ -545,6 +545,7 @@ function setTheme(lightMode) {
 
 function toggleTheme() {
   setTheme(!isLightMode);
+  render();
 }
 
 const savedTheme = localStorage.getItem('tetris-editor-theme');
@@ -591,7 +592,28 @@ function boardOrigin(cx, MID_unused) {
 // ─────────────────────────────────────────────
 
 
-const BG        = '#08080f';
+const CANVAS_THEMES = {
+  dark: {
+    bg: '#08080f',
+    grid: 'rgba(255,255,255,0.05)',
+    divider: 'rgba(60,60,100,0.8)',
+    vs: 'rgba(60,60,90,0.9)',
+    settledBase: 75,
+    settledStep: 3,
+  },
+  light: {
+    bg: '#f5f8ff',
+    grid: 'rgba(35,50,85,0.15)',
+    divider: 'rgba(120,140,180,0.7)',
+    vs: 'rgba(95,110,145,0.85)',
+    settledBase: 160,
+    settledStep: 2,
+  },
+};
+
+function getCanvasTheme() {
+  return isLightMode ? CANVAS_THEMES.light : CANVAS_THEMES.dark;
+}
 
 function hexToRgb(hex) {
   const r = parseInt(hex.slice(1,3),16);
@@ -657,9 +679,9 @@ function drawDropLine(cx, col, rowFrom, rowTo, x0, y0, color) {
   cx.restore();
 }
 
-function drawGrid(cx, x0, y0) {
+function drawGrid(cx, x0, y0, theme) {
   cx.save();
-  cx.strokeStyle = 'rgba(255,255,255,0.05)';
+  cx.strokeStyle = theme.grid;
   cx.lineWidth = 1;
   for (let c = 0; c <= COLS; c++) {
     cx.beginPath(); cx.moveTo(x0+c*cfg.cell, y0); cx.lineTo(x0+c*cfg.cell, y0+ROWS*cfg.cell); cx.stroke();
@@ -698,7 +720,7 @@ function drawDropLines(cx, key, fallRow, fallCol, ghostRow, x0, y0, color) {
   }
 }
 
-function drawBoard(cx, side, x0, y0, color) {
+function drawBoard(cx, side, x0, y0, color, theme) {
   const s = state[side];
 
   // settled — slate grey, same texture as falling pieces
@@ -708,7 +730,7 @@ function drawBoard(cx, side, x0, y0, color) {
     const px = x0 + col * cfg.cell;
     const py = y0 + row * cfg.cell;
     // slightly darker toward bottom
-    const fade = Math.round(75 + (19 - row) * 3);
+    const fade = Math.round(theme.settledBase + (19 - row) * theme.settledStep);
     const base = fade;
     cx.save();
     cx.globalAlpha = 0.95;
@@ -820,7 +842,8 @@ function resizeCanvas() {
 }
 
 function render() {
-  ctx.fillStyle = BG;
+  const canvasTheme = getCanvasTheme();
+  ctx.fillStyle = canvasTheme.bg;
   ctx.fillRect(0, 0, cfg.canvasW, cfg.canvasH);
 
   const MID = getMID();
@@ -835,7 +858,7 @@ function render() {
 
   // divider
   ctx.save();
-  ctx.strokeStyle = 'rgba(60,60,100,0.8)';
+  ctx.strokeStyle = canvasTheme.divider;
   ctx.lineWidth = 1;
   ctx.beginPath(); ctx.moveTo(MID, 80); ctx.lineTo(MID, cfg.canvasH-80); ctx.stroke();
   ctx.restore();
@@ -843,7 +866,7 @@ function render() {
   // VS
   ctx.save();
   ctx.font = `bold ${cfg.vsSize}px Courier New`;
-  ctx.fillStyle = 'rgba(60,60,90,0.9)';
+  ctx.fillStyle = canvasTheme.vs;
   ctx.textAlign = 'center';
   ctx.fillText('VS', MID, vsY);
   ctx.restore();
@@ -866,11 +889,11 @@ function render() {
   const [ax0, ay0] = boardOrigin(AGILE_CX);
   const [wx0, wy0] = boardOrigin(WF_CX);
 
-  drawGrid(ctx, ax0, ay0);
-  drawGrid(ctx, wx0, wy0);
+  drawGrid(ctx, ax0, ay0, canvasTheme);
+  drawGrid(ctx, wx0, wy0, canvasTheme);
 
-  drawBoard(ctx, 'agile', ax0, ay0, AGILE_COL);
-  drawBoard(ctx, 'waterfall', wx0, wy0, WF_COL);
+  drawBoard(ctx, 'agile', ax0, ay0, AGILE_COL, canvasTheme);
+  drawBoard(ctx, 'waterfall', wx0, wy0, WF_COL, canvasTheme);
 
   // legend removed
 
